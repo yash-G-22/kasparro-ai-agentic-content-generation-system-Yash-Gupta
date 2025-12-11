@@ -1,30 +1,59 @@
-# Multi-Agent Content Generation System for GlowBoost Product Data
+# LangChain-based Agentic Content Generation System
 
 ## Problem Statement
 
-Given a small, constrained product dataset for a skincare product, design and implement a modular **agentic automation system** that:
+Given a small, constrained product dataset for a skincare product, design and implement a **LangChain-based agentic system** that:
 
-- Parses the raw product data into a clean internal model.
-- Automatically generates at least 15 categorized user questions.
-- Uses a custom template system and reusable content logic blocks.
-- Assembles three structured content pages:
+- Parses raw product data into a clean internal model using LangChain tools
+- Generates categorized user questions through deterministic logic
+- Implements a content generation pipeline using LangChain's `RunnableSequence`
+- Creates three structured content pages:
   - FAQ Page
   - Product Description Page
   - Comparison Page (GlowBoost vs. fictional Product B)
-- Outputs all pages as clean, machine-readable JSON.
+- Outputs all pages as clean, machine-readable JSON
 
-The system must be modular, agent-based, and not a single monolithic script or simple GPT wrapper.
+The system leverages LangChain's abstractions for agent orchestration while maintaining a deterministic, no-external-API approach.
 
 ---
 
 ## Solution Overview
 
-The solution is a TypeScript-based CLI system composed of:
+The solution is a TypeScript-based CLI system built on LangChain, composed of:
 
-- **Agents** with single responsibilities and explicit input/output types.
-- **Reusable content logic blocks** (pure functions) that transform the internal product model into content elements (questions, answers, summaries, comparison points).
-- **Templates** that define the structure, fields, rules, and required blocks for each page type.
-- A central **orchestrator** that wires agents into an automation flow and writes the final JSON outputs.
+- **LangChain Tools**: Specialized tools for data loading, parsing, and content generation
+- **Runnable Pipelines**: Composable workflows using `RunnableSequence` for clear data flow
+- **Deterministic Logic**: Pure functions for content generation without external API dependencies
+- **Structured Outputs**: Type-safe JSON generation with Zod validation
+
+## LangChain Implementation
+
+The system is built using LangChain's core abstractions:
+
+1. **Tools**:
+   - `loadRawProduct`: Loads and validates input data
+   - `parseProduct`: Converts raw data to structured format
+   - `generateQuestions`: Creates user questions deterministically
+   - Page generation tools for each content type
+   - `writeOutputFiles`: Handles file system operations
+
+2. **Runnable Pipeline**:
+   ```typescript
+   const pipeline = RunnableSequence.from([
+     // 1. Load raw product
+     // 2. Parse into structured format
+     // 3. Generate questions
+     // 4. Build all pages
+     // 5. Write outputs
+   ]);
+   ```
+
+3. **Type Safety**:
+   - Input/Output types for all tools
+   - Zod schemas for validation
+   - Clear data flow between components
+
+## Outputs
 
 The pipeline takes a single product JSON (`data/product.json`) as input and produces:
 
@@ -32,7 +61,7 @@ The pipeline takes a single product JSON (`data/product.json`) as input and prod
 - `output/product_page.json`
 - `output/comparison_page.json`
 
-All intermediate decisions are encoded in code, not hidden prompts.
+All content is generated through deterministic logic with no hidden prompts or external API calls.
 
 ---
 
